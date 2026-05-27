@@ -1,6 +1,6 @@
 # **Synapse: Intelligence-Driven Knowledge Distillation**
 
-## **1. Visão Geral e Objetivos (O Pitch)**
+## **1. Visão Geral e Objetivos**
 
 **Synapse** é uma ferramenta CLI open-source projetada para atuar como a ponte entre fluxos de conversas efêmeras (Google Takeout/Gemini) e um sistema de conhecimento persistente (**Obsidian**).
 
@@ -20,7 +20,7 @@ Diferente de simples conversores, o Synapse utiliza agentes inteligentes para:
 
 ## **3. Especificação Técnica e Arquitetura**
 
-### **3.1 Padrões de Projeto (Design Patterns)**
+### **3.1 Padrões de Projeto**
 
 * **Adapter Pattern:** Para a camada de entrada de dados (Input Drivers).  
 * **Bridge Pattern:** Para a integração com LLMs, permitindo troca de provedores.  
@@ -28,10 +28,10 @@ Diferente de simples conversores, o Synapse utiliza agentes inteligentes para:
 
 ### **3.2 Stack Tecnológica**
 
-* **Linguagem:** Python 3.10+ (Ambiente Linux).  
+* **Linguagem:** Python 3.10+.  
 * **Orquestração de Agentes:** **CrewAI**.  
-* **Persistência de Estado:** synapse-manifest.json (Localizado na raiz do Vault).  
-* **Interface:** CLI (via click ou argparse).
+* **Persistência de Estado:** synapse-manifest.json.  
+* **Interface:** CLI.
 
 ### **3.3 Estrutura de Pastas do Vault (Output)**
 
@@ -75,7 +75,7 @@ O agente **Librarian** deve atualizar o User_Profile.md:
 
 ## **6. Plano de Execução Detalhado (Milestones)**
 
-### **Milestone 1: Foundation & Bootstrapping (A Base)**
+### **Milestone 1: Foundation & Bootstrapping**
 
 * [ ] Setup do ambiente (venv, requirements.txt, estrutura de pastas do projeto).  
 * [ ] Implementar CLI básica para capturar caminhos de --input e --output.  
@@ -85,7 +85,7 @@ O agente **Librarian** deve atualizar o User_Profile.md:
 * [ ] Implementar o Loader de JSON para o formato específico do Google Takeout.  
 * [ ] Lógica de filtragem: comparar IDs do JSON com o manifesto para ignorar conversas já processadas.
 
-### **Milestone 2: Intelligence & Formatting (O Cérebro)**
+### **Milestone 2: Intelligence & Formatting**
 
 * [ ] Configurar variáveis de ambiente e autenticação com a API do Gemini.  
 * [ ] Definir a classe de Agente Distiller com seu papel e ferramentas.  
@@ -93,7 +93,7 @@ O agente **Librarian** deve atualizar o User_Profile.md:
 * [ ] Implementar utilitário de escrita de Markdown (Markdown Writer) que garanta propriedades YAML compatíveis com Obsidian.  
 * [ ] Criar fluxo de teste: converter uma conversa única do JSON em um arquivo .md estruturado.
 
-### **Milestone 3: Connectivity & Identity (A Memória)**
+### **Milestone 3: Connectivity & Identity**
 
 * [ ] Definir a classe de Agente Librarian e suas responsabilidades de curadoria.  
 * [ ] Implementar leitor de User_Profile.md para carregar contexto atual do usuário.  
@@ -102,7 +102,7 @@ O agente **Librarian** deve atualizar o User_Profile.md:
 * [ ] Sistema de Auto-Link: escanear títulos existentes no /Atlas e sugerir links [[ ]] nas novas notas.  
 * [ ] Atualização automática de índices em cascata (adicionar novas entradas nos Index.md).
 
-### **Milestone 4: Refinement & Open Source (A Entrega)**
+### **Milestone 4: Refinement & Open Source**
 
 * [ ] Abstrair chamadas de LLM (Adapter Pattern) para permitir troca de modelos.  
 * [ ] Implementar sistema de Logs para acompanhar o progresso do processamento no terminal.  
