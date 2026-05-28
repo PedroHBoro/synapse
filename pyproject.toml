@@ -1,7 +1,42 @@
 [project]
 name = "synapse"
 version = "0.1.0"
-description = "Add your description here"
+description = "Intelligence-Driven Knowledge Distillation: Bridge between conversations and Obsidian."
 readme = "README.md"
-requires-python = ">=3.14"
-dependencies = []
+requires-python = ">=3.12"
+dependencies = [
+    "pydantic>=2.10.0",
+    "pydantic-settings>=2.7.0",
+    "crewai>=0.100.0",
+    "click>=8.1.0",
+    "python-dotenv>=1.0.1",
+    "loguru>=0.7.3",
+    "rich>=13.9.0",
+    "pyyaml>=6.0.1",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.3.0",
+    "ruff>=0.9.0",
+    "mypy>=1.14.0",
+    "pytest-cov>=6.0.0",
+    "pytest-mock>=3.14.0",
+]
+
+[tool.ruff]
+line-length = 88
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "W", "B", "C4", "ARG", "PTH"]
+ignore = []
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = "test_*.py"
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+ignore_missing_imports = true

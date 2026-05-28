@@ -1,111 +1,68 @@
 # **Synapse: Intelligence-Driven Knowledge Distillation**
 
-## **1. Visão Geral e Objetivos**
+## **1. Overview**
 
-**Synapse** é uma ferramenta CLI open-source projetada para atuar como a ponte entre fluxos de conversas efêmeras (Google Takeout/Gemini) e um sistema de conhecimento persistente (**Obsidian**).
+**Synapse** is an open-source CLI tool designed to act as a bridge between ephemeral conversation streams (Google Takeout, Gemini, etc.) and a persistent knowledge system (**Obsidian**).
 
-Diferente de simples conversores, o Synapse utiliza agentes inteligentes para:
+Unlike simple converters, Synapse leverages intelligent agents to:
 
-* **Destilar** conversas brutas em notas atômicas.  
-* **Mapear** o conhecimento através de índices em cascata.  
-* **Evoluir** um perfil de identidade do usuário (preferências, stack técnica e interesses) de forma iterativa.
+*   **Distill** raw conversations into atomic, meaningful notes.
+*   **Map** knowledge through cascading indexes.
+*   **Evolve** a user identity profile (preferences, technical stack, and interests) iteratively.
 
-## **2. Requisitos e Casos de Uso**
+## **2. Core Features**
 
-* **Input:** Arquivos JSON (padrão Google Takeout).  
-* **Output:** Um Vault Obsidian estruturado e autossuficiente.  
-* **Idempotência:** Não processar a mesma conversa duas vezes (verificação via hash/ID no manifesto).  
-* **Preservação de Tom:** Manter a personalidade e o estilo de escrita do usuário nas notas geradas.  
-* **Navegação Inteligente:** Criação automática de links bidirecionais [[ ]].
+*   **Input**: JSON files (Standard Google Takeout format).
+*   **Output**: A structured, self-contained Obsidian Vault.
+*   **Idempotency**: Smart processing that avoids duplicates via a manifest system.
+*   **Tone Preservation**: Maintains the user's personality and writing style in generated notes.
+*   **Smart Navigation**: Automated creation of bidirectional links [[ ]].
 
-## **3. Especificação Técnica e Arquitetura**
+## **3. Architecture & Tech Stack**
 
-### **3.1 Padrões de Projeto**
+### **3.1 Design Patterns**
+*   **Adapter Pattern**: For data ingestion (Input Drivers).
+*   **Bridge Pattern**: For LLM integration, allowing easy provider switching.
+*   **Strategy Pattern**: For different organization and indexing methods.
 
-* **Adapter Pattern:** Para a camada de entrada de dados (Input Drivers).  
-* **Bridge Pattern:** Para a integração com LLMs, permitindo troca de provedores.  
-* **Strategy Pattern:** Para diferentes métodos de organização.
+### **3.2 Tech Stack**
+*   **Language**: Python 3.12+ (Linux environment).
+*   **Agent Orchestration**: **CrewAI**.
+*   **State Persistence**: Hybrid YAML manifest system located in `.synapse/manifest/`.
+*   **CLI Framework**: **Click** with **Rich** for enhanced UI/UX.
+*   **Configuration**: **Pydantic Settings**.
+*   **Quality**: **Ruff** (Linting/Formatting) and **Pytest** (Testing).
 
-### **3.2 Stack Tecnológica**
+## **4. Execution Roadmap**
 
-* **Linguagem:** Python 3.10+.  
-* **Orquestração de Agentes:** **CrewAI**.  
-* **Persistência de Estado:** synapse-manifest.json.  
-* **Interface:** CLI.
+### **Milestone 1: Foundation & DX (Developer Experience)**
+*   [ ] Initialize CLI structure using Click and Rich.
+*   [ ] Implement Configuration Engine with Pydantic Settings (reading `.synapse` and env vars).
+*   [ ] Develop Vault Bootstrap logic (folder tree creation and manifest initialization).
+*   [ ] Set up Quality Gates (Ruff, Mypy, and Pytest configuration).
 
-### **3.3 Estrutura de Pastas do Vault (Output)**
+### **Milestone 2: Data Ingestion (The Adapter Phase)**
+*   [ ] Implement the Input Driver interface (Adapter Pattern).
+*   [ ] Develop the Google Takeout JSON Loader/Parser.
+*   [ ] Create a comprehensive unit test suite for the loader.
 
-```
-/SecondBrain (Raiz)  
-├── synapse-manifest.json    # Cache de processamento e metadados  
-├── Index.md                 # Índice Geral (Grand Central)  
-├── /Journal/                # Conversas datadas e logs  
-│   └── Index.md             # Índice cronológico  
-├── /Atlas/                  # Notas atômicas de conhecimento  
-│   └── Index.md             # Índice temático/MOC  
-├── /Identity/               # Perfil do usuário e preferências  
-│   ├── User_Profile.md      # Nota central de identidade  
-│   └── Index.md             # Índice de evolução de interesses  
-└── /Meta/                   # Configurações do Synapse e templates
-```
+### **Milestone 3: Atomic Distillation (The Distiller Agent)**
+*   [ ] Integrate CrewAI with Gemini/OpenAI providers.
+*   [ ] Develop the **Distiller** agent (prompts, roles, and tasks).
+*   [ ] Build the Markdown Writer with Obsidian-compatible YAML frontmatter.
+*   [ ] Implement Mocked Tests to verify distillation logic without hitting live APIs.
 
-## **4. Lógica de Processamento e Comportamento**
+### **Milestone 4: Connectivity & Identity (The Librarian Agent)**
+*   [ ] Develop the **Librarian** agent for curation and cross-linking.
+*   [ ] Implement Identity Evolution logic (updating `User_Profile.md`).
+*   [ ] Build the Auto-Linking system for existing `/Atlas` notes.
+*   [ ] Automated update of cascading indexes (`Index.md` files).
 
-### **4.1 Divisão de Notas (Atomicidade)**
+### **Milestone 5: Resilience & Polish**
+*   [ ] Implement robust error handling (API retries, timeouts).
+*   [ ] Finalize Progress Persistence in the manifest.
+*   [ ] Complete documentation (Contribution guide, CLI `--help`).
 
-O agente **Distiller** deve identificar mudanças semânticas de assunto dentro de uma mesma conversa.
+## **5. Contributing**
 
-* **Critério:** Se o tópico mudar drasticamente, o software gera arquivos .md distintos na pasta /Atlas.
-
-### **4.2 Gestão de Identidade e Conflitos**
-
-O agente **Librarian** deve atualizar o User_Profile.md:
-
-* **Novas Informações:** Adicionadas às seções respectivas.  
-* **Contradições:** Informação antiga movida para ## History/Archive, nova assume o topo.
-
-### **4.3 Preservação de Tom de Voz**
-
-* Uso de *Few-Shot Prompting* para replicar o estilo original (casual, técnico, etc).
-
-## **5. Agentes e Tarefas (CrewAI)**
-
-1. **The Distiller:** Extrai conhecimento e formata em Markdown.  
-2. **The Librarian:** Gerencia índices, links e perfil de identidade.
-
-## **6. Plano de Execução Detalhado (Milestones)**
-
-### **Milestone 1: Foundation & Bootstrapping**
-
-* [ ] Setup do ambiente (venv, requirements.txt, estrutura de pastas do projeto).  
-* [ ] Implementar CLI básica para capturar caminhos de --input e --output.  
-* [ ] Criar motor de Bootstrap: função que detecta se o Vault existe ou cria a árvore /Journal, /Atlas, /Identity, /Meta.  
-* [ ] Inicializar synapse-manifest.json com schema padrão e controle de versão.  
-* [ ] Gerar os arquivos Index.md iniciais com frontmatter YAML básico.  
-* [ ] Implementar o Loader de JSON para o formato específico do Google Takeout.  
-* [ ] Lógica de filtragem: comparar IDs do JSON com o manifesto para ignorar conversas já processadas.
-
-### **Milestone 2: Intelligence & Formatting**
-
-* [ ] Configurar variáveis de ambiente e autenticação com a API do Gemini.  
-* [ ] Definir a classe de Agente Distiller com seu papel e ferramentas.  
-* [ ] Desenvolver o prompt de sistema do Distiller com foco em extração atômica e tom de voz.  
-* [ ] Implementar utilitário de escrita de Markdown (Markdown Writer) que garanta propriedades YAML compatíveis com Obsidian.  
-* [ ] Criar fluxo de teste: converter uma conversa única do JSON em um arquivo .md estruturado.
-
-### **Milestone 3: Connectivity & Identity**
-
-* [ ] Definir a classe de Agente Librarian e suas responsabilidades de curadoria.  
-* [ ] Implementar leitor de User_Profile.md para carregar contexto atual do usuário.  
-* [ ] Desenvolver tarefa do Librarian para comparar novas notas com o perfil e identificar atualizações.  
-* [ ] Lógica de Gestão de Conflitos: mover informações obsoletas para o arquivo de Archive/History.  
-* [ ] Sistema de Auto-Link: escanear títulos existentes no /Atlas e sugerir links [[ ]] nas novas notas.  
-* [ ] Atualização automática de índices em cascata (adicionar novas entradas nos Index.md).
-
-### **Milestone 4: Refinement & Open Source**
-
-* [ ] Abstrair chamadas de LLM (Adapter Pattern) para permitir troca de modelos.  
-* [ ] Implementar sistema de Logs para acompanhar o progresso do processamento no terminal.  
-* [ ] Adicionar tratamento de erros (timeouts de API, JSON corrompido).  
-* [ ] Escrever README.md com instruções de instalação, configuração e guia de contribuição.  
-* [ ] Criar suite de testes unitários para o parser de JSON e lógica de idempotência.
+Instructions coming soon. This project follows strict architectural guidelines defined in `GEMINI.md` and ADRs.

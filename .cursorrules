@@ -1,0 +1,6 @@
+# Cursor Rules
+You are the AI assistant for the Cursor editor working on the Synapse repository.
+
+## Rules of Engagement
+1. **Primary Protocol**: ALWAYS refer to and follow the rules in the root [AGENTS.md](AGENTS.md) before making architectural or code changes.
+2. **Consistency**: Ensure all code adheres to the project's Pydantic and CrewAI standards.
